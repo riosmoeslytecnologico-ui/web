@@ -1,0 +1,832 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroTech Zone - Tienda de Componentes Electrónicos en Guatemala</title>
+    <meta property="og:title" content="ElectroTech Zone - Tienda de Componentes Electrónicos">
+    <meta property="og:description" content="Tu tienda especializada en componentes electrónicos en Guatemala">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Arduino_Board_-_Uno_%28R3%29.jpg/220px-Arduino_Board_-_Uno_%28R3%29.jpg">
+    <meta property="og:url" content="https://electrotechzone.com.gt">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c5aa0, #1e3c72);
+            color: #333;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(90deg, #0f4c75, #3282b8, #0f4c75);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
+            opacity: 0.3;
+            z-index: 0;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        header p {
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .search-bar {
+            background: white;
+            border-radius: 30px;
+            padding: 15px 25px;
+            margin: 20px auto;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            padding: 5px;
+        }
+        .search-bar button {
+            background: #3282b8;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+        .section-title {
+            color: #0f4c75;
+            font-size: 1.8rem;
+            margin: 30px 0 15px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #3282b8, #0f4c75);
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .product-img {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            overflow: hidden;
+            position: relative;
+        }
+        .product-img img {
+            max-width: 80%;
+            max-height: 80%;
+        }
+        .product-info {
+            padding: 15px;
+        }
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #0f4c75;
+        }
+        .product-price {
+            color: #3282b8;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .product-stock {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: #28a745;
+        }
+        .add-to-cart {
+            background: linear-gradient(90deg, #3282b8, #0f4c75);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 76, 117, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            max-width: 200px;
+            text-align: center;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 10px;
+        }
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px;
+            border-style: solid;
+            border-color: rgba(15, 76, 117, 0.9) transparent transparent transparent;
+        }
+        .cart-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .cart-items {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-total {
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: right;
+            margin-top: 15px;
+            color: #0f4c75;
+        }
+        .checkout-btn {
+            background: linear-gradient(90deg, #3282b8, #0f4c75);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 25px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .location-section {
+            margin-bottom: 30px;
+        }
+        .map-container {
+            height: 400px;
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .directions-btn {
+            background: linear-gradient(90deg, #3282b8, #0f4c75);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            width: 100%;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+        }
+        .payment-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .payment-methods {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .payment-method {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            width: 45%;
+            background: #e6f7ff;
+            border: 2px solid #3282b8;
+        }
+        .payment-method i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #3282b8;
+        }
+        .payment-form {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #0f4c75;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .cash-calculator {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .cash-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .cash-display h3 {
+            color: #0f4c75;
+        }
+        .cash-display .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3282b8;
+        }
+        .calculate-btn {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .change-result {
+            display: none;
+            background: #e6f7ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .change-result.show {
+            display: block;
+        }
+        .change-result h3 {
+            color: #0f4c75;
+            margin-bottom: 10px;
+        }
+        .change-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .submit-order {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: block;
+            margin: 30px auto;
+            width: 80%;
+            max-width: 400px;
+        }
+        .social-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .social-section h3 {
+            color: #0f4c75;
+            margin-bottom: 15px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #3282b8;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+        .contact-info {
+            margin-top: 15px;
+            color: #0f4c75;
+        }
+        .contact-info p {
+            margin-bottom: 5px;
+        }
+        .policies-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .policies-section h3 {
+            color: #0f4c75;
+            margin-bottom: 15px;
+        }
+        .policies-section p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .currency-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 30px;
+            padding: 5px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        .currency-selector select {
+            border: none;
+            background: transparent;
+            color: #0f4c75;
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+        }
+        .location-selector {
+            margin-bottom: 20px;
+        }
+        .shipping-options {
+            margin-bottom: 20px;
+        }
+        .shipping-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .shipping-option input {
+            margin-right: 10px;
+        }
+        .comments-section {
+            margin-top: 20px;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #0f4c75;
+            font-size: 1.2rem;
+            display: none;
+        }
+        footer {
+            background: #0f4c75;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+        footer p {
+            margin-bottom: 10px;
+        }
+        .card-type-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .card-type {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            border-color: #3282b8;
+            background: #e6f7ff;
+        }
+        .card-type img {
+            height: 30px;
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+            
+            .payment-method {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .currency-selector {
+                position: static;
+                margin: 10px auto;
+                width: fit-content;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .card-type-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="currency-selector">
+            <select id="currency">
+                <option value="GTQ">Quetzales (GTQ)</option>
+                <option value="USD">Dólares (USD)</option>
+            </select>
+        </div>
+        <h1><i class="fas fa-microchip"></i> ElectroTech Zone</h1>
+        <p>Tu tienda especializada en componentes electrónicos en Guatemala</p>
+    </header>
+    <div class="container">
+        <h2 class="section-title">Componentes Electrónicos</h2>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar componentes...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="products-grid">
+            <!-- Producto 1 - Arduino -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="https://www.shutterstock.com/image-vector/arduino-board-programing-internet-things-260nw-2172749531.jpg" alt="Arduino Uno">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Arduino Uno</div>
+                    <div class="product-price">Q120.00</div>
+                    <div class="product-stock">Stock: 15 unidades</div>
+                    <button class="add-to-cart">Añadir al Carrito</button>
+                </div>
+                <div class="tooltip">Microcontrolador popular para proyectos de electrónica</div>
+            </div>
+            
+            <!-- Producto 2 - Protoboard -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMk4N8rAS8f--6MipBRyo2YVu0hZFS38Ubuw&s" alt="Protoboard">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Protoboard</div>
+                    <div class="product-price">Q35.00</div>
+                    <div class="product-stock">Stock: 25 unidades</div>
+                    <button class="add-to-cart">Añadir al Carrito</button>
+                </div>
+                <div class="tooltip">Tabla para pruebas sin soldar componentes</div>
+            </div>
+            
+            <!-- Producto 3 - Sensor de Temperatura -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="https://www.electronicadiy.com/cdn/shop/products/lm35_700x700.jpg?v=1610125182" alt="Sensor de Temperatura">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Sensor de Temperatura</div>
+                    <div class="product-price">Q25.00</div>
+                    <div class="product-stock">Stock: 30 unidades</div>
+                    <button class="add-to-cart">Añadir al Carrito</button>
+                </div>
+                <div class="tooltip">Detecta temperatura ambiente con precisión</div>
+            </div>
+            
+            <!-- Producto 4 - LEDs Variados -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="https://oxdea.gt/wp-content/uploads/2021/07/LD1102-10MM-RD.png" alt="LEDs Variados">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">LEDs Variados</div>
+                    <div class="product-price">Q15.00</div>
+                    <div class="product-stock">Stock: 50 unidades</div>
+                    <button class="add-to-cart">Añadir al Carrito</button>
+                </div>
+                <div class="tooltip">Paquete de LEDs de diferentes colores</div>
+            </div>
+            
+            <!-- Producto 5 - Relé 5V -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="https://laelectronica.com.gt/image/cache/catalog/Productos/Diodos/Matrices%20Y%20Display/Display-7-Segmentos-1-Digito-1200x1200.jpg" alt="Relé 5V">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Relé 5V</div>
+                    <div class="product-price">Q30.00</div>
+                    <div class="product-stock">Stock: 20 unidades</div>
+                    <button class="add-to-cart">Añadir al Carrito</button>
+                </div>
+                <div class="tooltip">Interruptor controlado eléctricamente</div>
+            </div>
+        </div>
+        
+        <div class="cart-section">
+            <h2 class="section-title">Carrito de Compras</h2>
+            <div class="cart-items">
+                <div class="cart-item">
+                    <span>Arduino Uno</span>
+                    <span>Q120.00</span>
+                </div>
+                <div class="cart-item">
+                    <span>Protoboard</span>
+                    <span>Q35.00</span>
+                </div>
+                <div class="cart-item">
+                    <span>LEDs Variados</span>
+                    <span>Q15.00</span>
+                </div>
+            </div>
+            <div class="cart-total">Total: Q170.00</div>
+            <button class="checkout-btn">Proceder al Pago</button>
+        </div>
+        
+        <div class="location-section">
+            <h2 class="section-title">Ubicación de Entrega</h2>
+            <p>Nuestra tienda está ubicada en Quetzaltenango. Ingresa tu dirección exacta:</p>
+            
+            <div class="location-selector">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="calle">Calle:</label>
+                        <input type="text" id="calle" placeholder="Ej. 15 Calle">
+                    </div>
+                    <div class="form-group">
+                        <label for="avenida">Avenida:</label>
+                        <input type="text" id="avenida" placeholder="Ej. 6a Avenida">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="zona">Zona:</label>
+                        <input type="text" id="zona" placeholder="Ej. Zona 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="departamento">Departamento:</label>
+                        <select id="departamento">
+                            <option value="guatemala">Guatemala</option>
+                            <option value="quetzaltenango">Quetzaltenango</option>
+                            <option value="escuintla">Escuintla</option>
+                            <option value="santa-rosa">Santa Rosa</option>
+                            <option value="solola">Sololá</option>
+                            <option value="totonicapan">Totonicapán</option>
+                            <option value="quiche">Quiché</option>
+                            <option value="baja-verapaz">Baja Verapaz</option>
+                            <option value="alta-verapaz">Alta Verapaz</option>
+                            <option value="peten">Petén</option>
+                            <option value="izabal">Izabal</option>
+                            <option value="zacapa">Zacapa</option>
+                            <option value="chiquimula">Chiquimula</option>
+                            <option value="jalapa">Jalapa</option>
+                            <option value="jutiapa">Jutiapa</option>
+                            <option value="el-progreso">El Progreso</option>
+                            <option value="retalhuleu">Retalhuleu</option>
+                            <option value="san-marcos">San Marcos</option>
+                            <option value="huehuetenango">Huehuetenango</option>
+                            <option value="suchitepequez">Suchitepéquez</option>
+                            <option value="chimaltenango">Chimaltenango</option>
+                            <option value="sacatepequez">Sacatepéquez</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cabecera">Cabecera Municipal:</label>
+                    <input type="text" id="cabecera" placeholder="Ej. Quetzaltenango">
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15394.123456789!2d-91.5180!3d14.8348!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTTCsDUwJzA1LjMiTiA5McKwMzEnMDQuOCJX!5e0!3m2!1ses!2sgt!4v1234567890123" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            
+            <div class="shipping-options">
+                <h3>Opciones de Envío:</h3>
+                <div class="shipping-option">
+                    <input type="radio" id="home-delivery" name="shipping" value="home" checked>
+                    <label for="home-delivery">Entrega a Domicilio (Q25.00)</label>
+                </div>
+                <div class="shipping-option">
+                    <input type="radio" id="express" name="shipping" value="express">
+                    <label for="express">Express Fuerza (Q50.00)</label>
+                </div>
+                <div class="shipping-option">
+                    <input type="radio" id="pickup" name="shipping" value="pickup">
+                    <label for="pickup">Recoger en Tienda (Gratis)</label>
+                </div>
+            </div>
+            
+            <a href="https://maps.app.goo.gl/hZG5dbd6kDpFykiQ9" target="_blank" class="directions-btn">
+                <i class="fas fa-directions"></i> Obtener Direcciones en Google Maps
+            </a>
+        </div>
+        
+        <div class="payment-section">
+            <h2 class="section-title">Método de Pago</h2>
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <i class="fas fa-credit-card"></i>
+                    <p>Tarjeta de Crédito/Débito</p>
+                </div>
+                <div class="payment-method">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <p>Efectivo</p>
+                </div>
+            </div>
+            <div class="payment-form">
+                <h3>Información de la Tarjeta</h3>
+                
+                <div class="card-type-selector">
+                    <div class="card-type">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/200px-Visa_Inc._logo.svg.png" alt="Visa">
+                        <p>Visa</p>
+                    </div>
+                    <div class="card-type">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png" alt="Mastercard">
+                        <p>Mastercard</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nombre del Titular</label>
+                    <input type="text" placeholder="Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label>Número de Tarjeta</label>
+                    <input type="text" placeholder="1234 5678 9012 3456">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fecha de Expiración</label>
+                        <input type="text" placeholder="MM/AA">
+                    </div>
+                    <div class="form-group">
+                        <label>CVC</label>
+                        <input type="text" placeholder="123">
+                    </div>
+                </div>
+            </div>
+            <div class="payment-form">
+                <h3>Pago en Efectivo</h3>
+                <div class="cash-calculator">
+                    <div class="cash-display">
+                        <h3>Total a pagar:</h3>
+                        <div class="amount">Q170.00</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Monto recibido:</label>
+                        <input type="text" id="cash-amount" placeholder="0.00">
+                    </div>
+                    
+                    <button class="calculate-btn">Calcular Cambio</button>
+                    
+                    <div class="change-result" id="change-result">
+                        <h3>Cambio a devolver:</h3>
+                        <div class="change-amount" id="change-amount">Q0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comments-section">
+            <h3>Comentarios para mejorar nuestra página</h3>
+            <div class="form-group">
+                <textarea id="comments" rows="4" placeholder="Déjanos tus comentarios o sugerencias..."></textarea>
+            </div>
+        </div>
+        
+        <div class="policies-section">
+            <h3>Políticas y Términos de Devolución</h3>
+            <p>1. Los productos pueden ser devueltos dentro de los 30 días posteriores a la compra.</p>
+            <p>2. Los productos deben estar en su empaque original y sin usar.</p>
+            <p>3. El cliente es responsable de los costos de envío para devoluciones.</p>
+            <p>4. El reembolso se procesará dentro de los 5-7 días hábiles después de recibir el producto devuelto.</p>
+            <p>5. Para iniciar una devolución, contacta a nuestro servicio al cliente: riosmoeslytecnologico@gmail.com</p>
+        </div>
+        
+        <button class="submit-order">
+            <i class="fas fa-check-circle"></i> Confirmar Pedido
+        </button>
+        
+        <!-- Sección de redes sociales al final de la página -->
+        <div class="social-section">
+            <h3>Contáctanos</h3>
+            <div class="social-links">
+                <a href="https://www.facebook.com/moesly.rios.54" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/moesly.rios/" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="mailto:riosmoeslytecnologico@gmail.com">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+            <div class="contact-info">
+                <p><i class="fas fa-envelope"></i> riosmoeslytecnologico@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +502 1234 5678</p>
+                <p><i class="fas fa-map-marker-alt"></i> Quetzaltenango, Guatemala</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 ElectroTech Zone - Todos los derechos reservados</p>
+        <p>Diseñado con <i class="fas fa-heart" style="color: #e74c3c;"></i> en Guatemala</p>
+    </footer>
+</body>
+</html>
